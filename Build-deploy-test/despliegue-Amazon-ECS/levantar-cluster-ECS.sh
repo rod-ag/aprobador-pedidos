@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # configure profile
-ecs-cli configure profile --profile-name rag_profile --access-key AKIAJBAX7IAWWFNKJ2SQ --secret-key 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
+ecs-cli configure profile --profile-name rag_profile --access-key AKIAJB************** --secret-key d/NpjWwohOrx****************************
 
 # configure cluster
 ecs-cli configure --cluster pedidosCluster --default-launch-type EC2 --region eu-west-1 --config-name my_cluster_config
