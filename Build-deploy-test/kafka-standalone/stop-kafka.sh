@@ -1,1 +1,1 @@
-docker-compose rm -fsv
+docker-compose -f kafka-docker-compose.yml down -v
