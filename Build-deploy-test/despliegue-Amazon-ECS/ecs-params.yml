@@ -1,0 +1,32 @@
+version: 1
+task_definition:
+  services:
+    zookeeper:
+      essential: true
+      cpu_shares: 375
+      mem_limit: 838860800
+    kafka:
+      essential: true
+      cpu_shares: 375
+      mem_limit: 838860800
+    configserver:
+      essential: true
+      cpu_shares: 375
+      mem_limit: 838860800
+    eurekaregistry:
+      essential: true
+      cpu_shares: 375
+      mem_limit: 838860800
+    zuulproxy:
+      cpu_shares: 375
+      mem_limit: 838860800
+    pedidos:
+      cpu_shares: 375
+      mem_limit: 838860800
+    productos:
+      cpu_shares: 375
+      mem_limit: 838860800
+    usuarios:
+      cpu_shares: 375
+      mem_limit: 838860800
+

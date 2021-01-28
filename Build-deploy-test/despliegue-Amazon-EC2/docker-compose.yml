@@ -1,0 +1,83 @@
+version: "3"
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: always
+
+  configserver:
+    image: rodag15/config-server:latest
+    container_name: configserver
+    ports:
+      - 8888:8888
+
+  eurekaregistry:
+    image: rodag15/eureka-server:latest
+    container_name: eurekaregistry
+    depends_on:
+      - configserver
+    ports:
+      - 8761:8761
+      
+  zuulproxy:
+    image: rodag15/zuul-proxy:latest
+    container_name: zuulproxy
+    depends_on:
+      - configserver
+      - eurekaregistry
+      - pedidos
+    ports:
+      - 9999:9999
+      
+  pedidos:
+    image: rodag15/pedidos:latest
+    container_name: pedidos
+    depends_on:
+      - configserver
+      - eurekaregistry
+      - kafka
+    ports:
+      - 9003:9003
+    volumes:
+      - ${HOME}/pedidos-dockerized:/home
+      
+  productos:
+    image: rodag15/productos:latest
+    container_name: productos
+    depends_on:
+      - configserver
+      - kafka
+    volumes:
+      - ${HOME}/pedidos-dockerized:/home
+  
+  usuarios:
+    image: rodag15/usuarios:latest
+    container_name: usuarios
+    depends_on:
+      - configserver
+      - kafka
+    volumes:
+      - ${HOME}/pedidos-dockerized:/home
+
